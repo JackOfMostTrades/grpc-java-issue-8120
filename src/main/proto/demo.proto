@@ -1,0 +1,7 @@
+syntax="proto3";
+
+import "google/protobuf/empty.proto";
+
+service DemoService {
+  rpc DemoBiDirectional(stream google.protobuf.Empty) returns (stream google.protobuf.Empty);
+}

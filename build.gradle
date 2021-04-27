@@ -1,0 +1,53 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.16'
+    }
+}
+
+apply plugin: "java"
+apply plugin: 'com.google.protobuf'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+}
+
+protobuf {
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.0.0-pre2'
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+dependencies {
+    compile 'com.google.protobuf:protobuf-java:3.15.8'
+    compile 'io.grpc:grpc-stub:1.37.0'
+    compile 'io.grpc:grpc-netty:1.37.0'
+    compile 'io.grpc:grpc-protobuf:1.37.0'
+}
+
+idea {
+    module {
+        sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/java");
+        sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/grpc");
+    }
+}
+
+task server(type: JavaExec) {
+    main="Server"
+    classpath = sourceSets.main.runtimeClasspath
+}
+task client(type: JavaExec) {
+    main="Client"
+    classpath = sourceSets.main.runtimeClasspath
+}
+
